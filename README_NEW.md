@@ -23,8 +23,7 @@ A professional, fully responsive website for the Kenton-On-Sea Football & Mentor
 1. **Navigation Bar** - Sticky navigation with smooth scrolling and mobile menu
 2. **Hero Section** - Compelling landing section with call-to-action buttons
 3. **About Section** - Mission, vision, and key statistics about the club
-4. **Programs Section** - Four main programs:
-   - Elite Football Academy
+4. **Programs Section** - Three main programs:
    - Academic Support
    - Life Skills & Mentoring
    - Youth Development
