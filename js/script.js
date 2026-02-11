@@ -1,3 +1,218 @@
+// ===========================
+// LOAD ADMIN-MANAGED DATA
+// ===========================
+document.addEventListener('DOMContentLoaded', () => {
+    loadDashboardData();
+});
+
+function loadDashboardData() {
+    const data = {
+        fixtures: JSON.parse(localStorage.getItem('fixtures')) || [],
+        results: JSON.parse(localStorage.getItem('results')) || [],
+        players: JSON.parse(localStorage.getItem('players')) || [],
+        news: JSON.parse(localStorage.getItem('news')) || [],
+        media: JSON.parse(localStorage.getItem('media')) || []
+    };
+
+    displayFixtures(data.fixtures);
+    displayResults(data.results);
+    displayPlayers(data.players);
+    displayNews(data.news);
+    displayMedia(data.media);
+}
+
+function displayFixtures(fixtures) {
+    const container = document.querySelector('.fixtures-wrapper');
+    if (!container || fixtures.length === 0) return;
+
+    const fixturesCol = container.querySelector('.fixtures-column:nth-child(1)');
+    const fixturesList = fixturesCol.querySelector('.fixture-card').parentElement;
+    
+    const fixturesHtml = fixtures
+        .filter(f => new Date(f.date) >= new Date())
+        .sort((a, b) => new Date(a.date) - new Date(b.date))
+        .slice(0, 3)
+        .map(fixture => `
+            <div class="fixture-card">
+                <div class="fixture-date">
+                    <span class="date">${getDateDay(fixture.date)}</span>
+                    <span class="month">${getMonth(fixture.date)}</span>
+                </div>
+                <div class="fixture-details">
+                    <h4>${fixture.type}</h4>
+                    <p><strong>KTM vs ${fixture.opponent}</strong></p>
+                    <p class="time"><i class="fas fa-clock"></i> ${formatTime(fixture.time)}</p>
+                    <p class="venue"><i class="fas fa-map-marker-alt"></i> ${fixture.venue}</p>
+                </div>
+            </div>
+        `).join('');
+    
+    if (fixturesHtml) {
+        fixturesList.innerHTML = fixturesHtml;
+    }
+}
+
+function displayResults(results) {
+    const container = document.querySelector('.fixtures-wrapper');
+    if (!container || results.length === 0) return;
+
+    const resultsCol = container.querySelector('.fixtures-column:nth-child(2)');
+    const resultsList = resultsCol.querySelector('.result-card').parentElement;
+    
+    const resultsHtml = results
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 3)
+        .map(result => `
+            <div class="result-card">
+                <div class="result-date">${formatDate(result.date)}</div>
+                <div class="result-details">
+                    <p class="result-competition">${result.competition}</p>
+                    <p class="result-score">
+                        <span class="winner" style="color: ${result.ktmGoals > result.opponentGoals ? '#22c55e' : '#666'};">
+                            KTM ${result.ktmGoals}
+                        </span>
+                        - 
+                        <span style="color: ${result.opponentGoals > result.ktmGoals ? '#22c55e' : '#666'};">
+                            ${result.opponentGoals} ${result.opponent}
+                        </span>
+                    </p>
+                    ${result.info ? `<p class="result-info">${result.info}</p>` : ''}
+                </div>
+            </div>
+        `).join('');
+    
+    if (resultsHtml) {
+        resultsList.innerHTML = resultsHtml;
+    }
+}
+
+function displayPlayers(players) {
+    const container = document.querySelector('.squad-grid');
+    if (!container || players.length === 0) return;
+
+    const playersHtml = players
+        .sort((a, b) => a.jersey - b.jersey)
+        .map(player => `
+            <div class="player-card">
+                <div class="player-image">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h4>${player.name}</h4>
+                <p class="player-position">${player.position}</p>
+                <div class="player-stats">
+                    <div class="stat">
+                        <span class="stat-label">Goals</span>
+                        <span class="stat-value">${player.goals}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Assists</span>
+                        <span class="stat-value">${player.assists}</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Apps</span>
+                        <span class="stat-value">${player.appearances}</span>
+                    </div>
+                </div>
+                <p class="player-info">Age: ${player.age} | Jersey: ${player.jersey}</p>
+            </div>
+        `).join('');
+
+    if (playersHtml) {
+        container.innerHTML = playersHtml;
+    }
+}
+
+function displayNews(newsItems) {
+    const container = document.querySelector('.news-grid');
+    if (!container || newsItems.length === 0) return;
+
+    const newsHtml = newsItems
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .map(news => `
+            <article class="news-card">
+                <div class="news-category">${news.category}</div>
+                <h3>${news.title}</h3>
+                <p class="news-date"><i class="fas fa-calendar"></i> ${formatDate(news.date)}</p>
+                <p class="news-excerpt">${truncateText(news.content, 200)}</p>
+                <a href="#" class="read-more">Read Full Report →</a>
+            </article>
+        `).join('');
+
+    if (newsHtml) {
+        container.innerHTML = newsHtml;
+    }
+}
+
+function displayMedia(mediaItems) {
+    const container = document.querySelector('.media-grid');
+    if (!container || mediaItems.length === 0) return;
+
+    const mediaHtml = mediaItems
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .map(media => `
+            <div class="media-item ${media.type}">
+                <div class="media-thumbnail">
+                    <i class="fas ${getMediaIcon(media.type)}"></i>
+                    <span class="media-label">${capitalizeFirst(media.type)}</span>
+                </div>
+                <h4>${media.title}</h4>
+                <p class="media-meta">
+                    ${media.duration ? `<span>${media.duration}</span>` : ''}
+                    ${media.duration ? `<span>|</span>` : ''}
+                    <span>${formatDate(media.date)}</span>
+                </p>
+            </div>
+        `).join('');
+
+    if (mediaHtml) {
+        container.innerHTML = mediaHtml;
+    }
+}
+
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+}
+
+function formatTime(timeString) {
+    const [hours, minutes] = timeString.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    return `${displayHour}:${minutes} ${ampm}`;
+}
+
+function getDateDay(dateString) {
+    return new Date(dateString).getDate();
+}
+
+function getMonth(dateString) {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return months[new Date(dateString).getMonth()];
+}
+
+function truncateText(text, maxLength) {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+}
+
+function capitalizeFirst(text) {
+    return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function getMediaIcon(type) {
+    const icons = {
+        'video': 'fa-play-circle',
+        'photo': 'fa-image',
+        'interview': 'fa-microphone'
+    };
+    return icons[type] || 'fa-image';
+}
+
+// ===========================
+// ORIGINAL SCRIPT FUNCTIONALITY
+// ===========================
+
 // Mobile Menu Toggle
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
@@ -23,13 +238,15 @@ navLinks.forEach(link => {
 // Smooth Scroll for Navigation Links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+        if (this.getAttribute('href') !== '#') {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
         }
     });
 });
@@ -98,6 +315,7 @@ function showNotification(message, type = 'success') {
         }
 
         @keyframes slideIn {
+
             from {
                 transform: translateX(400px);
                 opacity: 0;

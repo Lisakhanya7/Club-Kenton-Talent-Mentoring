@@ -495,9 +495,424 @@ body {
 }
 
 /* ===========================
-   TESTIMONIALS SECTION
+   FIXTURES & RESULTS SECTION
+   =========================== */
+.fixtures {
+    padding: 80px 20px;
+    background-color: #fff;
+}
+
+.fixtures-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+}
+
+.fixtures-column h3 {
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.fixture-card {
+    background-color: var(--light-color);
+    border-left: 4px solid var(--secondary-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.fixture-card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transform: translateX(5px);
+}
+
+.fixture-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--secondary-color);
+    color: #fff;
+    min-width: 60px;
+    border-radius: 8px;
+    padding: 0.5rem;
+}
+
+.fixture-date .date {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.fixture-date .month {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.fixture-details h4 {
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.fixture-details p {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+}
+
+.fixture-details .time,
+.fixture-details .venue {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.result-card {
+    background-color: var(--light-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.result-card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.result-date {
+    color: var(--secondary-color);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.result-competition {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.result-score {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.result-score .winner {
+    color: var(--success-color);
+}
+
+.result-score .draw {
+    color: var(--text-color);
+}
+
+.result-info {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.league-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.league-table thead {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.league-table th,
+.league-table td {
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.league-table th:first-child,
+.league-table td:first-child {
+    text-align: center;
+}
+
+.league-table th:nth-child(2),
+.league-table td:nth-child(2) {
+    text-align: left;
+}
+
+.league-table tbody tr:hover {
+    background-color: var(--light-color);
+}
+
+.league-table tr.highlight {
+    background-color: rgba(249, 115, 22, 0.1);
+    font-weight: 600;
+}
+
+.league-table tr.highlight td {
+    color: var(--secondary-color);
+}
+
+/* ===========================
+   SQUAD & PLAYERS SECTION
+   =========================== */
+.squad {
+    padding: 80px 20px;
+    background-color: var(--light-color);
+}
+
+.squad-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2.5rem;
+}
+
+.player-card {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    text-align: center;
+    border-top: 4px solid var(--secondary-color);
+}
+
+.player-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.player-image {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.player-card h4 {
+    margin: 1.5rem 1rem 0.5rem;
+    color: var(--text-color);
+    font-size: 1.2rem;
+}
+
+.player-position {
+    color: var(--secondary-color);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.player-stats {
+    display: flex;
+    justify-content: space-around;
+    background-color: var(--light-color);
+    margin: 1rem;
+    border-radius: 8px;
+    padding: 1rem 0;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.player-info {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    padding: 0 1rem 1rem;
+}
+
+/* ===========================
+   NEWS & UPDATES SECTION
+   =========================== */
+.news {
+    padding: 80px 20px;
+    background-color: #fff;
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2.5rem;
+}
+
+.news-card {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    border-top: 4px solid var(--secondary-color);
+}
+
+.news-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.news-category {
+    background-color: var(--secondary-color);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    align-self: fit-content;
+    margin: 1.5rem 1.5rem 0 1.5rem;
+    border-radius: 4px;
+}
+
+.news-card h3 {
+    color: var(--text-color);
+    margin: 1rem 1.5rem;
+    font-size: 1.2rem;
+    line-height: 1.4;
+}
+
+.news-date {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.news-excerpt {
+    color: var(--text-light);
+    padding: 0 1.5rem 1rem;
+    line-height: 1.7;
+    font-size: 0.95rem;
+    flex-grow: 1;
+}
+
+.read-more {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: 600;
+    margin: 0 1.5rem 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.read-more:hover {
+    color: var(--primary-color);
+}
+
+/* ===========================
+   MEDIA SECTION
+   =========================== */
+.media {
+    padding: 80px 20px;
+    background-color: var(--light-color);
+}
+
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+}
+
+.media-item {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.media-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.media-thumbnail {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #fff;
+    position: relative;
+    gap: 1rem;
+}
+
+.media-thumbnail i {
+    font-size: 3rem;
+}
+
+.media-label {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.media-item h4 {
+    color: var(--text-color);
+    margin: 1.5rem 1rem 0.5rem;
+    font-size: 1.1rem;
+    line-height: 1.4;
+}
+
+.media-meta {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    margin: 0 1rem 1rem;
+}
+
+.media-item.video .media-thumbnail {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.media-item.photo .media-thumbnail {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+
+.media-item.interview .media-thumbnail {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+/* ===========================
+  TESTIMONIALS SECTION
    =========================== */
 .testimonials {
+
     padding: 80px 20px;
     background: linear-gradient(135deg, #f8fafc 0%, #f0f4f8 100%);
 }
@@ -772,6 +1187,22 @@ body {
     .about-stats {
         grid-template-columns: 1fr;
     }
+
+    .fixtures-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .squad-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .media-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 480px) {
@@ -859,4 +1290,32 @@ body {
 .scroll-up:hover {
     background-color: var(--secondary-color);
     transform: translateY(-5px);
+}
+
+/* ===========================
+   ADMIN LINK
+   =========================== */
+.admin-link {
+    position: fixed;
+    bottom: 30px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(0, 82, 204, 0.4);
+    transition: all 0.3s ease;
+    z-index: 998;
+}
+
+.admin-link:hover {
+    background-color: var(--secondary-color);
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 8px 20px rgba(249, 115, 22, 0.5);
 }

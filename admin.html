@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Admin Dashboard - Kenton Talent Mentoring</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="container">
+            <div class="admin-title">
+                <h1>Admin Dashboard</h1>
+                <p>Manage Fixtures, Results, News & Squad</p>
+            </div>
+            <div class="admin-actions">
+                <a href="index.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Website</a>
+                <button class="btn btn-danger" id="clearDataBtn"><i class="fas fa-trash"></i> Clear All Data</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <!-- Sidebar Navigation -->
+        <aside class="admin-sidebar">
+            <nav class="admin-nav">
+                <a href="#fixtures" class="nav-item active" data-section="fixtures">
+                    <i class="fas fa-calendar"></i> Fixtures & Results
+                </a>
+                <a href="#squad" class="nav-item" data-section="squad">
+                    <i class="fas fa-users"></i> Squad Management
+                </a>
+                <a href="#news" class="nav-item" data-section="news">
+                    <i class="fas fa-newspaper"></i> News & Updates
+                </a>
+                <a href="#media" class="nav-item" data-section="media">
+                    <i class="fas fa-images"></i> Media Gallery
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Fixtures & Results Section -->
+            <section id="fixtures" class="admin-section active">
+                <div class="section-header">
+                    <h2>Fixtures & Results Management</h2>
+                    <p>Add, edit, or delete upcoming matches and results</p>
+                </div>
+
+                <!-- Add Fixture Form -->
+                <div class="admin-form-card">
+                    <h3><i class="fas fa-plus-circle"></i> Add New Fixture</h3>
+                    <form id="fixtureForm" class="admin-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Match Type *</label>
+                                <select id="fixtureType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="League Division 1">League Division 1</option>
+                                    <option value="U18 Championship">U18 Championship</option>
+                                    <option value="Youth Cup">Youth Cup</option>
+                                    <option value="Friendly">Friendly Match</option>
+                                    <option value="Tournament">Tournament</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Date *</label>
+                                <input type="date" id="fixtureDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Time *</label>
+                                <input type="time" id="fixtureTime" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Opponent Team *</label>
+                                <input type="text" id="fixtureOpponent" placeholder="e.g., Blue Stars FC" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Venue *</label>
+                                <input type="text" id="fixtureVenue" placeholder="e.g., Kenton Sports Ground" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Age Group</label>
+                                <select id="fixtureAgeGroup">
+                                    <option value="">General</option>
+                                    <option value="U12">U12 Team</option>
+                                    <option value="U14">U14 Team</option>
+                                    <option value="U16">U16 Team</option>
+                                    <option value="U18">U18 Team</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Home/Away</label>
+                                <select id="fixtureHomeAway">
+                                    <option value="Home">Home</option>
+                                    <option value="Away">Away</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Add Fixture</button>
+                    </form>
+                </div>
+
+                <!-- Add Result Form -->
+                <div class="admin-form-card">
+                    <h3><i class="fas fa-plus-circle"></i> Add Match Result</h3>
+                    <form id="resultForm" class="admin-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Competition *</label>
+                                <select id="resultCompetition" required>
+                                    <option value="">Select Competition</option>
+                                    <option value="League Division 1">League Division 1</option>
+                                    <option value="U18 Championship">U18 Championship</option>
+                                    <option value="Youth Cup">Youth Cup</option>
+                                    <option value="Friendly">Friendly Match</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Date *</label>
+                                <input type="date" id="resultDate" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Opponent *</label>
+                                <input type="text" id="resultOpponent" placeholder="e.g., Pirates FC" required>
+                            </div>
+                            <div class="form-group">
+                                <label>KTM Goals *</label>
+                                <input type="number" id="ktmGoals" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Opponent Goals *</label>
+                                <input type="number" id="opponentGoals" min="0" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full">
+                                <label>Goalscorers / Notes</label>
+                                <textarea id="resultInfo" placeholder="e.g., Sipho Khumalo (2), Mandla Nkosi (1)"></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Add Result</button>
+                    </form>
+                </div>
+
+                <!-- Fixtures List -->
+                <div class="admin-data-card">
+                    <h3>Upcoming Fixtures</h3>
+                    <div id="fixturesList" class="data-list">
+                        <p class="empty-state">No fixtures added yet</p>
+                    </div>
+                </div>
+
+                <!-- Results List -->
+                <div class="admin-data-card">
+                    <h3>Recent Results</h3>
+                    <div id="resultsList" class="data-list">
+                        <p class="empty-state">No results added yet</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Squad Management Section -->
+            <section id="squad" class="admin-section">
+                <div class="section-header">
+                    <h2>Squad Management</h2>
+                    <p>Add and manage player profiles</p>
+                </div>
+
+                <div class="admin-form-card">
+                    <h3><i class="fas fa-plus-circle"></i> Add Player</h3>
+                    <form id="playerForm" class="admin-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Player Name *</label>
+                                <input type="text" id="playerName" placeholder="e.g., Sipho Khumalo" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Position *</label>
+                                <select id="playerPosition" required>
+                                    <option value="">Select Position</option>
+                                    <option value="Goalkeeper">Goalkeeper</option>
+                                    <option value="Defender">Defender</option>
+                                    <option value="Midfielder">Midfielder</option>
+                                    <option value="Forward">Forward</option>
+                                    <option value="Striker">Striker</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Age *</label>
+                                <input type="number" id="playerAge" min="6" max="30" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Jersey Number *</label>
+                                <input type="number" id="playerJersey" min="1" max="99" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Goals</label>
+                                <input type="number" id="playerGoals" min="0" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Assists</label>
+                                <input type="number" id="playerAssists" min="0" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Appearances</label>
+                                <input type="number" id="playerApps" min="0" value="0">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Add Player</button>
+                    </form>
+                </div>
+
+                <div class="admin-data-card">
+                    <h3>Players</h3>
+                    <div id="playersList" class="data-list">
+                        <p class="empty-state">No players added yet</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- News Section -->
+            <section id="news" class="admin-section">
+                <div class="section-header">
+                    <h2>News & Updates</h2>
+                    <p>Publish articles, achievements, and announcements</p>
+                </div>
+
+                <div class="admin-form-card">
+                    <h3><i class="fas fa-plus-circle"></i> Add News Article</h3>
+                    <form id="newsForm" class="admin-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Category *</label>
+                                <select id="newsCategory" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Match Report">Match Report</option>
+                                    <option value="Training Update">Training Update</option>
+                                    <option value="Club Announcement">Club Announcement</option>
+                                    <option value="Achievement">Achievement</option>
+                                    <option value="Transfer News">Transfer News</option>
+                                    <option value="Academic Success">Academic Success</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Date *</label>
+                                <input type="date" id="newsDate" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full">
+                                <label>Title *</label>
+                                <input type="text" id="newsTitle" placeholder="e.g., KTM Dominates in League Victory" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full">
+                                <label>Article Content *</label>
+                                <textarea id="newsContent" rows="6" placeholder="Write the full article here..." required></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Publish Article</button>
+                    </form>
+                </div>
+
+                <div class="admin-data-card">
+                    <h3>News Articles</h3>
+                    <div id="newsList" class="data-list">
+                        <p class="empty-state">No articles published yet</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Media Section -->
+            <section id="media" class="admin-section">
+                <div class="section-header">
+                    <h2>Media Gallery</h2>
+                    <p>Add videos, photos, and interviews</p>
+                </div>
+
+                <div class="admin-form-card">
+                    <h3><i class="fas fa-plus-circle"></i> Add Media Item</h3>
+                    <form id="mediaForm" class="admin-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Media Type *</label>
+                                <select id="mediaType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="video">Video Highlight</option>
+                                    <option value="photo">Match Photo</option>
+                                    <option value="interview">Interview</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Date *</label>
+                                <input type="date" id="mediaDate" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full">
+                                <label>Title *</label>
+                                <input type="text" id="mediaTitle" placeholder="e.g., KTM vs Pirates FC - Match Highlights" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full">
+                                <label>Duration / Details</label>
+                                <input type="text" id="mediaDuration" placeholder="e.g., 2:45 min or 12 photos">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Add to Gallery</button>
+                    </form>
+                </div>
+
+                <div class="admin-data-card">
+                    <h3>Media Items</h3>
+                    <div id="mediaList" class="data-list">
+                        <p class="empty-state">No media items added yet</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
