@@ -19,7 +19,7 @@ The Club has a fully functional Admin Dashboard that allows team management to e
 
 ## Using the Admin Dashboard
 
-### 1. **Fixtures & Results Management**
+### 1. Fixtures & Results Management
 
 #### Adding a Fixture (Upcoming Match)
 1. Click on **"Fixtures & Results"** in the sidebar
@@ -43,7 +43,7 @@ The Club has a fully functional Admin Dashboard that allows team management to e
 2. Click **"Add Result"**
 3. Latest results will show on the website in the correct section
 
-### 2. **Squad Management**
+### 2. Squad Management
 
 #### Adding a Player
 1. Click on **"Squad Management"** in the sidebar
@@ -51,12 +51,12 @@ The Club has a fully functional Admin Dashboard that allows team management to e
    - **Name**: Player full name
    - **Position**: Goalkeeper, Defender, Midfielder, Forward, or Striker
    - **Age**: Player's current age
-   - **Jersey Number**: Their playing number (1-99)
+   - **Jersey Number**: Their playing number (1–99)
    - **Goals, Assists, Appearances**: Season statistics
 3. Click **"Add Player"**
 4. Players automatically appear on the Squad page, sorted by jersey number
 
-### 3. **News & Updates**
+### 3. News & Updates
 
 #### Publishing an Article
 1. Click on **"News & Updates"** in the sidebar
@@ -68,7 +68,7 @@ The Club has a fully functional Admin Dashboard that allows team management to e
 3. Click **"Publish Article"**
 4. Articles appear on the website sorted by newest first
 
-### 4. **Media Gallery**
+### 4. Media Gallery
 
 #### Adding Media Items
 1. Click on **"Media Gallery"** in the sidebar
@@ -96,14 +96,13 @@ The Club has a fully functional Admin Dashboard that allows team management to e
 ### 🗑️ Deleting Data
 - Each item has a **Delete** button
 - If you accidentally delete something, you can re-add it
-- There's also a **"Clear All Data"** button (be careful - this deletes everything!)
+- There's also a **"Clear All Data"** button (be careful — this deletes everything!)
 
 ### 📱 Mobile Access
 - The admin dashboard is mobile-responsive
 - You can manage content from your phone or tablet
 
 ## Tips & Best Practices
-
 1. **Keep Dates Current**: Regularly update fixtures and remove past matches
 2. **Update Results Quickly**: Add match results the same day as the game
 3. **Consistent News**: Post updates regularly (once a week minimum for activity)
@@ -127,11 +126,4 @@ The Club has a fully functional Admin Dashboard that allows team management to e
 
 ## Future Enhancements
 - Cloud backup of data
-- Multi-user access with passwords
-- Image uploads for media
-- Email notifications
-- Mobile app integration
-
----
-
-**For support or questions, contact the webmaster.**
+- Multi

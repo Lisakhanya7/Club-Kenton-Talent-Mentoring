@@ -27,13 +27,11 @@ function loadDashboardData() {
 // ===========================
 
 function displayFixtures(fixtures) {
-    const container = document.querySelector('.fixtures-column:has(h3:contains("Upcoming"))');
-    if (!container) return;
-
-    const list = container.querySelector('.fixture-card');
-    if (!list || fixtures.length === 0) return;
+    const container = document.querySelector('.fixtures-wrapper .fixtures-column.upcoming');
+    if (!container || fixtures.length === 0) return;
 
     const fixturesHtml = fixtures
+        .filter(f => new Date(f.date) >= new Date())
         .sort((a, b) => new Date(a.date) - new Date(b.date))
         .slice(0, 3)
         .map(fixture => `
@@ -51,8 +49,7 @@ function displayFixtures(fixtures) {
             </div>
         `).join('');
 
-    const firstFixture = container.querySelector('.fixture-card');
-    firstFixture.parentNode.insertAdjacentHTML('afterend', fixturesHtml);
+    container.innerHTML = fixturesHtml;
 }
 
 // ===========================
@@ -60,11 +57,8 @@ function displayFixtures(fixtures) {
 // ===========================
 
 function displayResults(results) {
-    const container = document.querySelector('.fixtures-column:has(h3:contains("Latest"))');
-    if (!container) return;
-
-    const list = container.querySelector('.result-card');
-    if (!list || results.length === 0) return;
+    const container = document.querySelector('.fixtures-wrapper .fixtures-column.latest');
+    if (!container || results.length === 0) return;
 
     const resultsHtml = results
         .sort((a, b) => new Date(b.date) - new Date(a.date))
@@ -75,10 +69,10 @@ function displayResults(results) {
                 <div class="result-details">
                     <p class="result-competition">${result.competition}</p>
                     <p class="result-score">
-                        <span class="winner" style="color: ${result.ktmGoals > result.opponentGoals ? '#22c55e' : '#666'};">
+                        <span style="color: ${result.ktmGoals > result.opponentGoals ? '#22c55e' : '#666'};">
                             KTM ${result.ktmGoals}
                         </span>
-                        - 
+                        -
                         <span style="color: ${result.opponentGoals > result.ktmGoals ? '#22c55e' : '#666'};">
                             ${result.opponentGoals} ${result.opponent}
                         </span>
@@ -88,8 +82,7 @@ function displayResults(results) {
             </div>
         `).join('');
 
-    const firstResult = container.querySelector('.result-card');
-    firstResult.parentNode.insertAdjacentHTML('afterend', resultsHtml);
+    container.innerHTML = resultsHtml;
 }
 
 // ===========================
@@ -104,24 +97,13 @@ function displayPlayers(players) {
         .sort((a, b) => a.jersey - b.jersey)
         .map(player => `
             <div class="player-card">
-                <div class="player-image">
-                    <i class="fas fa-user-circle"></i>
-                </div>
+                <div class="player-image"><i class="fas fa-user-circle"></i></div>
                 <h4>${player.name}</h4>
                 <p class="player-position">${player.position}</p>
                 <div class="player-stats">
-                    <div class="stat">
-                        <span class="stat-label">Goals</span>
-                        <span class="stat-value">${player.goals}</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">Assists</span>
-                        <span class="stat-value">${player.assists}</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">Apps</span>
-                        <span class="stat-value">${player.appearances}</span>
-                    </div>
+                    <div class="stat"><span>Goals</span> ${player.goals}</div>
+                    <div class="stat"><span>Assists</span> ${player.assists}</div>
+                    <div class="stat"><span>Apps</span> ${player.appearances}</div>
                 </div>
                 <p class="player-info">Age: ${player.age} | Jersey: ${player.jersey}</p>
             </div>
@@ -186,11 +168,13 @@ function displayMedia(mediaItems) {
 // ===========================
 
 function formatDate(dateString) {
+    if (!dateString) return '';
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('en-US', options);
 }
 
 function formatTime(timeString) {
+    if (!timeString) return '';
     const [hours, minutes] = timeString.split(':');
     const hour = parseInt(hours);
     const ampm = hour >= 12 ? 'PM' : 'AM';
@@ -208,11 +192,12 @@ function getMonth(dateString) {
 }
 
 function truncateText(text, maxLength) {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + '...';
+    if (!text) return '';
+    return text.length <= maxLength ? text : text.substring(0, maxLength) + '...';
 }
 
 function capitalizeFirst(text) {
+    if (!text) return '';
     return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
@@ -223,49 +208,4 @@ function getMediaIcon(type) {
         'interview': 'fa-microphone'
     };
     return icons[type] || 'fa-image';
-}
-
-// Keep existing script functionality
-// (Mobile menu toggle, smooth scrolling, etc.)
-
-// Mobile menu toggle
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('.nav-menu');
-
-if (hamburger) {
-    hamburger.addEventListener('click', () => {
-        navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
-    });
-
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.style.display = 'none';
-        });
-    });
-}
-
-// Scroll to top button
-const scrollUpBtn = document.querySelector('.scroll-up');
-if (scrollUpBtn) {
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-            scrollUpBtn.classList.add('active');
-        } else {
-            scrollUpBtn.classList.remove('active');
-        }
-    });
-
-    scrollUpBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-}
-
-// Contact form handling
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        alert('Thank you for your message! We will get back to you soon.');
-        contactForm.reset();
-    });
 }
