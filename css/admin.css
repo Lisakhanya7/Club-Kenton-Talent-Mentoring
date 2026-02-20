@@ -159,6 +159,111 @@ body {
 }
 
 /* ===========================
+   STAFF MEMBER MENU
+   =========================== */
+.staff-member-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.staff-menu-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.6rem 1.2rem;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.staff-menu-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.staff-menu-toggle i:first-child {
+    font-size: 1.3rem;
+}
+
+.staff-menu-toggle i:last-child {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.staff-member-menu.active .staff-menu-toggle {
+    background-color: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.staff-member-menu.active .staff-menu-toggle i:last-child {
+    transform: rotate(180deg);
+}
+
+.staff-menu-dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    min-width: 200px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.staff-member-menu.active .staff-menu-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.staff-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1.5rem;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.staff-menu-item:hover {
+    background-color: var(--light-color);
+    color: var(--primary-color);
+    padding-left: 1.8rem;
+}
+
+.staff-menu-item i {
+    font-size: 1rem;
+}
+
+.staff-menu-logout {
+    color: var(--danger-color);
+    border-top: 1px solid var(--border-color);
+}
+
+.staff-menu-logout:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
+}
+
+/* ===========================
    ADMIN CONTAINER LAYOUT
    =========================== */
 .admin-container {

@@ -179,6 +179,23 @@
             <div class="admin-actions">
                 <a href="index.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Website</a>
                 <button class="btn btn-danger" id="clearDataBtn"><i class="fas fa-trash"></i> Clear All Data</button>
+                
+                <!-- Staff Member Menu (shown only when logged in) -->
+                <div id="staffMemberMenu" class="staff-member-menu" style="display: none;">
+                    <button id="staffMenuToggle" class="staff-menu-toggle">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="staffMenuName"></span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="staff-menu-dropdown">
+                        <a href="#" id="changePasswordBtn" class="staff-menu-item">
+                            <i class="fas fa-key"></i> Change Password
+                        </a>
+                        <a href="#" id="logoutBtn" class="staff-menu-item staff-menu-logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -556,10 +573,25 @@
             const loginOverlay = document.getElementById('staffLoginOverlay');
             const loginForm = document.getElementById('staffLoginForm');
             const logoutBtn = document.getElementById('logoutBtn');
-            const staffLogoutContainer = document.getElementById('staffLogoutContainer');
-            const staffNameSpan = document.getElementById('staffName');
+            const staffMemberMenu = document.getElementById('staffMemberMenu');
+            const staffMenuToggle = document.getElementById('staffMenuToggle');
+            const staffMenuName = document.getElementById('staffMenuName');
             const adminContent = document.querySelector('.admin-container');
             const adminHeader = document.querySelector('.admin-header');
+
+            // Toggle staff menu dropdown
+            if (staffMenuToggle) {
+                staffMenuToggle.addEventListener('click', () => {
+                    staffMemberMenu.classList.toggle('active');
+                });
+            }
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (staffMemberMenu && !staffMemberMenu.contains(e.target)) {
+                    staffMemberMenu.classList.remove('active');
+                }
+            });
 
             // Check if user is authenticated
             function checkAuth() {
@@ -568,8 +600,8 @@
                     loginOverlay.style.display = 'none';
                     adminContent.style.display = 'flex';
                     adminHeader.style.display = 'block';
-                    staffLogoutContainer.style.display = 'block';
-                    staffNameSpan.textContent = staff.name + ' (' + staff.role + ')';
+                    staffMemberMenu.style.display = 'inline-block';
+                    staffMenuName.textContent = staff.name;
                     
                     // Initialize admin module
                     if (typeof AdminModule !== 'undefined') {
@@ -579,7 +611,7 @@
                     loginOverlay.style.display = 'flex';
                     adminContent.style.display = 'none';
                     adminHeader.style.display = 'none';
-                    staffLogoutContainer.style.display = 'none';
+                    staffMemberMenu.style.display = 'none';
                 }
             }
 
@@ -604,10 +636,12 @@
 
             // Handle logout
             if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
+                logoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
                     const result = AuthService.logout();
                     alert(result.message);
                     checkAuth();
+                    staffMemberMenu.classList.remove('active');
                 });
             }
 
@@ -618,8 +652,10 @@
             const cancelChange = document.getElementById('cancelChangePwd');
 
             if (changePwdBtn) {
-                changePwdBtn.addEventListener('click', () => {
+                changePwdBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
                     changePwdOverlay.style.display = 'flex';
+                    staffMemberMenu.classList.remove('active');
                 });
             }
 
