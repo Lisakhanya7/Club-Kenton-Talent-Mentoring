@@ -166,25 +166,31 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, var(--primary-color) 0%, #003d7a 100%);
     color: #fff;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.2);
+    padding: 1rem 2rem;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
     z-index: 100;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 1.5rem;
+    gap: 2rem;
+    border-top: 3px solid rgba(255, 255, 255, 0.1);
 }
 
 .staff-status {
     display: flex;
     align-items: center;
-    gap: 0.7rem;
+    gap: 0.8rem;
     color: #fff;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    border-left: 3px solid var(--success-color);
+    min-width: fit-content;
 }
 
 .staff-status i {
@@ -194,30 +200,32 @@ body {
 
 .staff-actions {
     display: flex;
-    gap: 1rem;
+    gap: 0.8rem;
     align-items: center;
     flex-wrap: wrap;
 }
 
 .btn-logout-action {
-    padding: 0.7rem 1.5rem;
-    font-size: 0.95rem;
+    padding: 0.6rem 1.3rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.15);
     color: #fff;
-    border: 2px solid #fff;
+    border: 2px solid rgba(255, 255, 255, 0.4);
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.5rem;
+    white-space: nowrap;
 }
 
 .btn-logout-action:hover {
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.6);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
 .btn-logout-action:active {
@@ -225,13 +233,43 @@ body {
 }
 
 .btn-logout-danger {
-    background-color: rgba(239, 68, 68, 0.8);
-    border-color: #fff;
+    background-color: rgba(239, 68, 68, 0.85);
+    border-color: rgba(239, 68, 68, 1);
 }
 
 .btn-logout-danger:hover {
     background-color: var(--danger-color);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    border-color: #fff;
+    box-shadow: 0 6px 15px rgba(239, 68, 68, 0.5);
+}
+
+/* ===========================
+   RESPONSIVE STAFF LOGOUT
+   =========================== */
+@media (max-width: 768px) {
+    .staff-logout {
+        padding: 0.8rem 1.5rem;
+        gap: 1rem;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .staff-status {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .staff-actions {
+        width: 100%;
+        justify-content: center;
+        gap: 0.6rem;
+    }
+
+    .btn-logout-action {
+        flex: 1;
+        justify-content: center;
+        min-width: 120px;
+    }
 }
 
 /* ===========================
@@ -242,7 +280,7 @@ body {
     grid-template-columns: 250px 1fr;
     gap: 0;
     min-height: calc(100vh - 200px);
-    padding-bottom: 7.5rem;
+    padding-bottom: 140px;
 }
 
 .admin-sidebar {
