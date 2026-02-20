@@ -3,9 +3,9 @@
  * Manages staff login and authorization
  */
 const AuthService = {
-    // Staff credentials - Keep confidential, update as needed
-    // Add staff members here with secure passwords
-    STAFF_LIST: {
+    // Default staff credentials - Keep confidential, update as needed
+    // These are used as initial values; passwords can be changed by users
+    DEFAULT_STAFF: {
         'khayalethu': { 
             password: 'YourPassword@123', 
             name: 'Khayalethu Ngangqu', 
@@ -16,6 +16,37 @@ const AuthService = {
             name: 'John Smith', 
             role: 'Coach' 
         }
+    },
+
+    /**
+     * Get the current staff list (from localStorage or defaults)
+     * @returns {Object} Staff list
+     */
+    getStaffList() {
+        const stored = localStorage.getItem('staffCredentials');
+        if (stored) {
+            try {
+                return JSON.parse(stored);
+            } catch (e) {
+                console.error('Failed to parse stored credentials, using defaults');
+                return { ...this.DEFAULT_STAFF };
+            }
+        }
+        return { ...this.DEFAULT_STAFF };
+    },
+
+    /**
+     * Initialize staff credentials (run once on first load)
+     */
+    initializeCredentials() {
+        if (!localStorage.getItem('staffCredentials')) {
+            localStorage.setItem('staffCredentials', JSON.stringify(this.DEFAULT_STAFF));
+        }
+    },
+
+    // Keep STAFF_LIST as a getter for backward compatibility
+    get STAFF_LIST() {
+        return this.getStaffList();
     },
 
     /**
@@ -125,7 +156,9 @@ const AuthService = {
             };
         }
 
-        if (this.STAFF_LIST[username]) {
+        const staffList = this.getStaffList();
+        
+        if (staffList[username]) {
             return {
                 success: false,
                 message: '❌ Username already exists.'
@@ -140,11 +173,14 @@ const AuthService = {
         }
 
         // Add new staff
-        this.STAFF_LIST[username] = {
+        staffList[username] = {
             password: password,
             name: name,
             role: role
         };
+        
+        // Save to localStorage
+        localStorage.setItem('staffCredentials', JSON.stringify(staffList));
 
         return {
             success: true,
@@ -161,7 +197,9 @@ const AuthService = {
     changePassword(currentPassword, newPassword) {
         try {
             const staff = this.verifyAccess();
-            const record = this.STAFF_LIST[staff.id];
+            const staffList = this.getStaffList();
+            const record = staffList[staff.id];
+            
             if (!record) {
                 return { success: false, message: '❌ Unable to locate your account.' };
             }
@@ -178,8 +216,9 @@ const AuthService = {
                 return { success: false, message: '❌ New password must be different from the old one.' };
             }
 
-            // update password
+            // Update password and save to localStorage
             record.password = newPassword;
+            localStorage.setItem('staffCredentials', JSON.stringify(staffList));
 
             // if email service available and staff record has email field, send notification
             if (typeof EmailService !== 'undefined' && EmailService.isAvailable() && record.email) {
@@ -194,7 +233,7 @@ const AuthService = {
                 });
             }
 
-            return { success: true, message: '✅ Password changed successfully.' };
+            return { success: true, message: '✅ Password changed successfully. Your new password is saved.' };
         } catch (err) {
             return { success: false, message: err.message };
         }
@@ -215,6 +254,9 @@ const AuthService = {
 
 // Initialize auth check on page load
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize credentials from localStorage
+    AuthService.initializeCredentials();
+    
     // Only check auth on admin pages
     if (document.title.includes('Admin') || window.location.pathname.includes('admin')) {
         if (!AuthService.isAuthenticated()) {

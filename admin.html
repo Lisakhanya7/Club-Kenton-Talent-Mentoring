@@ -108,16 +108,9 @@
     </style>
 </head>
 <body>
-    <!-- Staff Logout Button (shown only when logged in) -->
-    <div id="staffLogoutContainer" class="staff-logout" style="display: none;">
-        <span id="staffStatus" class="staff-status">
-            <i class="fas fa-check-circle"></i>
-            <span id="staffName"></span>
-        </span>
-        <div class="staff-actions" style="margin-top:0.5rem; display:flex; gap:0.5rem;">
-            <button id="changePasswordBtn" class="btn btn-secondary" style="padding: 0.5rem 1rem;"><i class="fas fa-key"></i> Change Password</button>
-            <button id="logoutBtn" class="btn btn-secondary" style="padding: 0.5rem 1rem;"><i class="fas fa-sign-out-alt"></i> Logout</button>
-        </div>
+    <!-- Staff Login Overlay (shown when not logged in) -->
+    <div id="staffLoginOverlay" class="staff-login-overlay">
+        <div class="staff-login-modal">
             <h2><i class="fas fa-lock"></i> Admin Dashboard</h2>
             <p style="color: #0052a3; font-weight: bold; margin-bottom: 1.5rem;">Club Kenton Talent Mentoring</p>
             <p>Staff members only. Please log in with your credentials.</p>
@@ -141,6 +134,18 @@
             <p style="margin-top: 1.5rem; font-size: 0.85rem; color: #999;">
                 <i class="fas fa-shield-alt"></i> Secure access for authorized staff only
             </p>
+        </div>
+    </div>
+
+    <!-- Staff Logout Button (shown only when logged in) -->
+    <div id="staffLogoutContainer" class="staff-logout" style="display: none;">
+        <span id="staffStatus" class="staff-status">
+            <i class="fas fa-check-circle"></i>
+            <span id="staffName"></span>
+        </span>
+        <div class="staff-actions" style="margin-top:0.5rem; display:flex; gap:0.5rem;">
+            <button id="changePasswordBtn" class="btn btn-secondary" style="padding: 0.5rem 1rem;"><i class="fas fa-key"></i> Change Password</button>
+            <button id="logoutBtn" class="btn btn-secondary" style="padding: 0.5rem 1rem;"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>
     </div>
 
