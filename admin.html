@@ -490,7 +490,7 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Media Type *</label>
-                                <select id="mediaType" required>
+                                <select id="mediaType" required onchange="handleMediaTypeChange()">
                                     <option value="">Select Type</option>
                                     <option value="video">Video Highlight</option>
                                     <option value="photo">Match Photo</option>
@@ -507,6 +507,29 @@
                             <div class="form-group full">
                                 <label>Title *</label>
                                 <input type="text" id="mediaTitle" placeholder="e.g., KTM vs Pirates FC - Match Highlights" required>
+                            </div>
+                        </div>
+
+                        <!-- Video File Upload (visible only for video type) -->
+                        <div class="form-row" id="videoUploadGroup" style="display: none;">
+                            <div class="form-group full">
+                                <label>Upload MP4 Video File *</label>
+                                <div class="file-upload-wrapper">
+                                    <input type="file" id="mediaVideoFile" accept=".mp4,video/mp4" style="display: none;">
+                                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('mediaVideoFile').click()">
+                                        <i class="fas fa-upload"></i> Choose MP4 File
+                                    </button>
+                                    <span id="videoFileName" style="margin-left: 1rem; color: #666;">No file selected</span>
+                                </div>
+                                <small style="color: #999; display: block; margin-top: 0.5rem;">Maximum file size: 100MB. Only MP4 format is supported.</small>
+                            </div>
+                        </div>
+
+                        <!-- URL for non-video types -->
+                        <div class="form-row" id="urlInputGroup">
+                            <div class="form-group full">
+                                <label>Media URL</label>
+                                <input type="url" id="mediaUrl" placeholder="e.g., https://example.com/image.jpg or video URL">
                             </div>
                         </div>
 
@@ -689,6 +712,45 @@
 
             // Initial auth check
             checkAuth();
+        });
+
+        // Handle media type change
+        function handleMediaTypeChange() {
+            const mediaType = document.getElementById('mediaType').value;
+            const videoUploadGroup = document.getElementById('videoUploadGroup');
+            const urlInputGroup = document.getElementById('urlInputGroup');
+            const mediaVideoFile = document.getElementById('mediaVideoFile');
+
+            if (mediaType === 'video') {
+                videoUploadGroup.style.display = 'flex';
+                urlInputGroup.style.display = 'none';
+                mediaVideoFile.required = true;
+            } else {
+                videoUploadGroup.style.display = 'none';
+                urlInputGroup.style.display = 'flex';
+                mediaVideoFile.required = false;
+            }
+        }
+
+        // Handle video file selection
+        document.addEventListener('DOMContentLoaded', () => {
+            const videoFileInput = document.getElementById('mediaVideoFile');
+            if (videoFileInput) {
+                videoFileInput.addEventListener('change', (e) => {
+                    const fileName = e.target.files && e.target.files.length > 0 
+                        ? e.target.files[0].name 
+                        : 'No file selected';
+                    document.getElementById('videoFileName').textContent = fileName;
+                });
+            }
+
+            // Prevent default link behavior in staff menu
+            const staffMenuItems = document.querySelectorAll('.staff-menu-item');
+            staffMenuItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    // Let the event handlers in the DOMContentLoaded listener handle it
+                });
+            });
         });
     </script>
 </body>

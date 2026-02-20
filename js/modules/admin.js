@@ -348,22 +348,64 @@ const AdminModule = {
         // Verify user is authenticated staff
         try {
             const staff = AuthService.verifyAccess();
+            const mediaType = document.getElementById('mediaType').value;
             
             const media = {
                 title: document.getElementById('mediaTitle').value,
                 date: document.getElementById('mediaDate').value,
-                type: document.getElementById('mediaType').value,
-                url: document.getElementById('mediaUrl').value,
-                category: document.getElementById('mediaCategory').value,
+                type: mediaType,
+                duration: document.getElementById('mediaDuration').value,
                 uploadedBy: staff.name,
                 uploadedRole: staff.role,
                 timestamp: new Date().toLocaleString()
             };
 
-            StorageManager.addItem('media', media);
-            document.getElementById('mediaForm').reset();
-            this.displayMedia(StorageManager.load('media'));
-            alert('✅ Media uploaded successfully by ' + staff.name + '!');
+            // Handle video file upload
+            if (mediaType === 'video') {
+                const fileInput = document.getElementById('mediaVideoFile');
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    alert('❌ Please select an MP4 video file.');
+                    return;
+                }
+
+                const file = fileInput.files[0];
+                if (!file.name.toLowerCase().endsWith('.mp4')) {
+                    alert('❌ Only MP4 files are supported.');
+                    return;
+                }
+
+                if (file.size > 100 * 1024 * 1024) {
+                    alert('❌ File size must be less than 100MB.');
+                    return;
+                }
+
+                // Convert file to base64
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    media.videoData = event.target.result;
+                    media.fileName = file.name;
+                    media.fileSize = file.size;
+                    
+                    StorageManager.addItem('media', media);
+                    document.getElementById('mediaForm').reset();
+                    document.getElementById('videoFileName').textContent = 'No file selected';
+                    this.displayMedia(StorageManager.load('media'));
+                    alert('✅ Video uploaded successfully by ' + staff.name + '!');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Handle URL-based media (photos, interviews, etc.)
+                media.url = document.getElementById('mediaUrl').value;
+                if (!media.url && mediaType !== 'video') {
+                    alert('❌ Please provide a URL for this media type.');
+                    return;
+                }
+
+                StorageManager.addItem('media', media);
+                document.getElementById('mediaForm').reset();
+                this.displayMedia(StorageManager.load('media'));
+                alert('✅ Media uploaded successfully by ' + staff.name + '!');
+            }
         } catch (error) {
             alert('❌ ' + error.message);
         }
@@ -380,20 +422,37 @@ const AdminModule = {
 
         const html = medias
             .sort((a, b) => new Date(b.date) - new Date(a.date))
-            .map(item => `
-                <div class="data-item">
-                    <div class="item-info">
-                        <strong>${item.title}</strong>
-                        <br/>
-                        <small>${item.type.toUpperCase()} | ${formatDate(item.date)}</small>
-                        <br/>
-                        <small>Uploaded by: <strong>${item.uploadedBy}</strong> (${item.uploadedRole})</small>
-                        <br/>
-                        <small><a href="${item.url}" target="_blank">View →</a></small>
+            .map(item => {
+                let mediaContent = '';
+                
+                if (item.type === 'video' && item.videoData) {
+                    mediaContent = `
+                        <div style="margin-bottom: 1rem;">
+                            <video width="100%" height="300" controls style="border-radius: 8px; background: #000;">
+                                <source src="${item.videoData}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    `;
+                } else if (item.url) {
+                    mediaContent = `<small><a href="${item.url}" target="_blank">View →</a></small>`;
+                }
+
+                return `
+                    <div class="data-item">
+                        <div class="item-info">
+                            ${mediaContent}
+                            <strong>${item.title}</strong>
+                            <br/>
+                            <small>${item.type.toUpperCase()} | ${formatDate(item.date)}</small>
+                            ${item.duration ? `<br/><small>Duration: ${item.duration}</small>` : ''}
+                            <br/>
+                            <small>Uploaded by: <strong>${item.uploadedBy}</strong> (${item.uploadedRole})</small>
+                        </div>
+                        <button class="delete-btn" onclick="AdminModule.deleteMedia(${item.id})">Delete</button>
                     </div>
-                    <button class="delete-btn" onclick="AdminModule.deleteMedia(${item.id})">Delete</button>
-                </div>
-            `).join('');
+                `;
+            }).join('');
 
         container.innerHTML = html;
     },

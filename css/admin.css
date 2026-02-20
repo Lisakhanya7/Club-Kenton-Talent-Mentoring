@@ -264,8 +264,18 @@ body {
 }
 
 /* ===========================
-   ADMIN CONTAINER LAYOUT
+   FILE UPLOAD STYLES
    =========================== */
+.file-upload-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+#videoFileName {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
 .admin-container {
     display: grid;
     grid-template-columns: 250px 1fr;
