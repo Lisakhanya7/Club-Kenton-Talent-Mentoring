@@ -30,13 +30,12 @@ program: document.getElementById('programName').value,
 The complete application (including program name) is sent to EmailJS:
 
 ```javascript
-// emailService.js - Lines 27-37
 const emailParams = {
-    to_email: 'clubktm1@gmail.com',      // Club email
-    from_name: applicationData.name,     // Applicant name
-    from_email: applicationData.email,   // Applicant email
-    phone: applicationData.phone,        // Applicant phone
-    program: applicationData.program,    // ← PROGRAM NAME HERE
+    to_email: 'clubktm1@gmail.com',
+    from_name: applicationData.name,
+    from_email: applicationData.email,
+    phone: applicationData.phone,
+    program: applicationData.program,
     role: applicationData.role.toUpperCase(),
     age: applicationData.age,
     experience: applicationData.experience,
