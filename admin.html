@@ -137,18 +137,6 @@
         </div>
     </div>
 
-    <!-- Staff Logout Button (shown only when logged in) -->
-    <div id="staffLogoutContainer" class="staff-logout" style="display: none;">
-        <span id="staffStatus" class="staff-status">
-            <i class="fas fa-check-circle"></i>
-            <span id="staffName"></span>
-        </span>
-        <div class="staff-actions">
-            <button id="changePasswordBtn" class="btn btn-logout-action"><i class="fas fa-key"></i> Change Password</button>
-            <button id="logoutBtn" class="btn btn-logout-action btn-logout-danger"><i class="fas fa-sign-out-alt"></i> Logout</button>
-        </div>
-    </div>
-
     <!-- Change Password Modal -->
     <div id="changePasswordOverlay" class="staff-login-overlay" style="display: none;">
         <div class="staff-login-modal">
@@ -191,6 +179,17 @@
             <div class="admin-actions">
                 <a href="index.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Website</a>
                 <button class="btn btn-danger" id="clearDataBtn"><i class="fas fa-trash"></i> Clear All Data</button>
+                <!-- Staff Status and Actions (shown only when logged in) -->
+                <div id="staffLogoutContainer" class="staff-logout-inline" style="display: none;">
+                    <span id="staffStatus" class="staff-status-inline">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="staffName"></span>
+                    </span>
+                    <div class="staff-actions-inline">
+                        <button id="changePasswordBtn" class="btn btn-logout-action"><i class="fas fa-key"></i> Change Password</button>
+                        <button id="logoutBtn" class="btn btn-logout-action btn-logout-danger"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
