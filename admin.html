@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Admin Dashboard - Kenton Talent Mentoring</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .staff-login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0052a3 0%, #003d7a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .staff-login-modal {
+            background: white;
+            padding: 3rem 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        .staff-login-modal h2 {
+            color: #0052a3;
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .staff-login-modal p {
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .staff-login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .staff-login-form input {
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .staff-login-form input:focus {
+            outline: none;
+            border-color: #0052a3;
+            box-shadow: 0 0 0 3px rgba(0, 82, 163, 0.1);
+        }
+
+        .staff-login-form button {
+            padding: 1rem;
+            background-color: #0052a3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .staff-login-form button:hover {
+            background-color: #003d7a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 82, 163, 0.3);
+        }
+
+        .staff-login-form button:active {
+            transform: translateY(0);
+        }
+
+        .staff-logout {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+        }
+
+        .staff-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #28a745;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .staff-status i {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <!-- Staff Logout Button (shown only when logged in) -->
+    <div id="staffLogoutContainer" class="staff-logout" style="display: none;">
+        <span id="staffStatus" class="staff-status">
+            <i class="fas fa-check-circle"></i>
+            <span id="staffName"></span>
+        </span>
+        <div class="staff-actions" style="margin-top:0.5rem; display:flex; gap:0.5rem;">
+            <button id="changePasswordBtn" class="btn btn-secondary" style="padding: 0.5rem 1rem;"><i class="fas fa-key"></i> Change Password</button>
+            <button id="logoutBtn" class="btn btn-secondary" style="padding: 0.5rem 1rem;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+            <h2><i class="fas fa-lock"></i> Admin Dashboard</h2>
+            <p style="color: #0052a3; font-weight: bold; margin-bottom: 1.5rem;">Club Kenton Talent Mentoring</p>
+            <p>Staff members only. Please log in with your credentials.</p>
+
+            <form id="staffLoginForm" class="staff-login-form">
+                <input 
+                    type="text" 
+                    id="staffUsername" 
+                    placeholder="Username" 
+                    autocomplete="username"
+                    required>
+                <input 
+                    type="password" 
+                    id="staffPassword" 
+                    placeholder="Password" 
+                    autocomplete="current-password"
+                    required>
+                <button type="submit"><i class="fas fa-sign-in-alt"></i> Login</button>
+            </form>
+
+            <p style="margin-top: 1.5rem; font-size: 0.85rem; color: #999;">
+                <i class="fas fa-shield-alt"></i> Secure access for authorized staff only
+            </p>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordOverlay" class="staff-login-overlay" style="display: none;">
+        <div class="staff-login-modal">
+            <h2><i class="fas fa-key"></i> Change Password</h2>
+            <p>Update your password anytime. New password must be at least 8 characters and different from the current one.</p>
+
+            <form id="changePasswordForm" class="staff-login-form">
+                <input
+                    type="password"
+                    id="currentPassword"
+                    placeholder="Current Password"
+                    autocomplete="current-password"
+                    required>
+                <input
+                    type="password"
+                    id="newPassword"
+                    placeholder="New Password (8+ chars)"
+                    autocomplete="new-password"
+                    required>
+                <input
+                    type="password"
+                    id="confirmNewPassword"
+                    placeholder="Confirm New Password"
+                    autocomplete="new-password"
+                    required>
+                <button type="submit"><i class="fas fa-check-circle"></i> Change</button>
+            </form>
+
+            <button id="cancelChangePwd" class="btn btn-secondary" style="margin-top:1rem;"><i class="fas fa-times"></i> Cancel</button>
+        </div>
+    </div>
+
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="container">
+            <div class="admin-title">
+                <h1>Admin Dashboard</h1>
+                <p>Manage Fixtures, Results, News & Squad</p>
+            </div>
+            <div class="admin-actions">
+                <a href="index.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Website</a>
+                <button class="btn btn-danger" id="clearDataBtn"><i class="fas fa-trash"></i> Clear All Data</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <!-- Sidebar Navigation -->
+        <aside class="admin-sidebar">
+            <nav class="admin-nav">
+                <a href="#fixtures" class="nav-item active" data-section="fixtures">
+                    <i class="fas fa-calendar"></i> Fixtures & Results
+                </a>
+                <a href="#squad" class="nav-item" data-section="squad">
+                    <i class="fas fa-users"></i> Squad Management
+                </a>
+                <a href="#news" class="nav-item" data-section="news">
+                    <i class="fas fa-newspaper"></i> News & Updates
+                </a>
+                <a href="#media" class="nav-item" data-section="media">
+                    <i class="fas fa-images"></i> Media Gallery
+                </a>
+                <a href="#applications" class="nav-item" data-section="applications">
+                    <i class="fas fa-file-alt"></i> Program Applications
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Fixtures & Results Section -->
+            <section id="fixtures" class="admin-section active">
+                <div class="section-header">
+                    <h2>Fixtures & Results Management</h2>
+                    <p>Add, edit, or delete upcoming matches and results</p>
+                </div>
+
+                <!-- Add Fixture Form -->
+                <div class="admin-form-card">
+                    <h3><i class="fas fa-plus-circle"></i> Add New Fixture</h3>
+                    <form id="fixtureForm" class="admin-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Match Type *</label>
+                                <select id="fixtureType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="League Division 1">League Division 1</option>
+                                    <option value="U18 Championship">U18 Championship</option>
+                                    <option value="Youth Cup">Youth Cup</option>
+                                    <option value="Friendly">Friendly Match</option>
+                                    <option value="Tournament">Tournament</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Date *</label>
+                                <input type="date" id="fixtureDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Time *</label>
+                                <input type="time" id="fixtureTime" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Opponent Team *</label>
+                                <input type="text" id="fixtureOpponent" placeholder="e.g., Blue Stars FC" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Venue *</label>
+                                <input type="text" id="fixtureVenue" placeholder="e.g., Kenton Sports Ground" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Age Group</label>
+                                <select id="fixtureAgeGroup">
+                                    <option value="">General</option>
+                                    <option value="U12">U12 Team</option>
+                                    <option value="U14">U14 Team</option>
+                                    <option value="U16">U16 Team</option>
+                                    <option value="U18">U18 Team</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Home/Away</label>
+                                <select id="fixtureHomeAway">
+                                    <option value="Home">Home</option>
+                                    <option value="Away">Away</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Add Fixture</button>
+                    </form>
+                </div>
+
+                <!-- Add Result Form -->
+                <div class="admin-form-card">
+                    <h3><i class="fas fa-plus-circle"></i> Add Match Result</h3>
+                    <form id="resultForm" class="admin-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Competition *</label>
+                                <select id="resultCompetition" required>
+                                    <option value="">Select Competition</option>
+                                    <option value="League Division 1">League Division 1</option>
+                                    <option value="U18 Championship">U18 Championship</option>
+                                    <option value="Youth Cup">Youth Cup</option>
+                                    <option value="Friendly">Friendly Match</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Date *</label>
+                                <input type="date" id="resultDate" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Opponent *</label>
+                                <input type="text" id="resultOpponent" placeholder="e.g., Pirates FC" required>
+                            </div>
+                            <div class="form-group">
+                                <label>KTM Goals *</label>
+                                <input type="number" id="ktmGoals" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Opponent Goals *</label>
+                                <input type="number" id="opponentGoals" min="0" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full">
+                                <label>Goalscorers / Notes</label>
+                                <textarea id="resultInfo" placeholder="e.g., Sipho Khumalo (2), Mandla Nkosi (1)"></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Add Result</button>
+                    </form>
+                </div>
+
+                <!-- Fixtures List -->
+                <div class="admin-data-card">
+                    <h3>Upcoming Fixtures</h3>
+                    <div id="fixturesList" class="data-list">
+                        <p class="empty-state">No fixtures added yet</p>
+                    </div>
+                </div>
+
+                <!-- Results List -->
+                <div class="admin-data-card">
+                    <h3>Recent Results</h3>
+                    <div id="resultsList" class="data-list">
+                        <p class="empty-state">No results added yet</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Squad Management Section -->
+            <section id="squad" class="admin-section">
+                <div class="section-header">
+                    <h2>Squad Management</h2>
+                    <p>Add and manage player profiles</p>
+                </div>
+
+                <div class="admin-form-card">
+                    <h3><i class="fas fa-plus-circle"></i> Add Player</h3>
+                    <form id="playerForm" class="admin-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Player Name *</label>
+                                <input type="text" id="playerName" placeholder="e.g., Sipho Khumalo" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Position *</label>
+                                <select id="playerPosition" required>
+                                    <option value="">Select Position</option>
+                                    <option value="Goalkeeper">Goalkeeper</option>
+                                    <option value="Defender">Defender</option>
+                                    <option value="Midfielder">Midfielder</option>
+                                    <option value="Forward">Forward</option>
+                                    <option value="Striker">Striker</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Age *</label>
+                                <input type="number" id="playerAge" min="6" max="30" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Jersey Number *</label>
+                                <input type="number" id="playerJersey" min="1" max="99" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Goals</label>
+                                <input type="number" id="playerGoals" min="0" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Assists</label>
+                                <input type="number" id="playerAssists" min="0" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Appearances</label>
+                                <input type="number" id="playerApps" min="0" value="0">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Add Player</button>
+                    </form>
+                </div>
+
+                <div class="admin-data-card">
+                    <h3>Players</h3>
+                    <div id="playersList" class="data-list">
+                        <p class="empty-state">No players added yet</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- News Section -->
+            <section id="news" class="admin-section">
+                <div class="section-header">
+                    <h2>News & Updates</h2>
+                    <p>Publish articles, achievements, and announcements</p>
+                </div>
+
+                <div class="admin-form-card">
+                    <h3><i class="fas fa-plus-circle"></i> Add News Article</h3>
+                    <form id="newsForm" class="admin-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Category *</label>
+                                <select id="newsCategory" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Match Report">Match Report</option>
+                                    <option value="Training Update">Training Update</option>
+                                    <option value="Club Announcement">Club Announcement</option>
+                                    <option value="Achievement">Achievement</option>
+                                    <option value="Transfer News">Transfer News</option>
+                                    <option value="Academic Success">Academic Success</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Date *</label>
+                                <input type="date" id="newsDate" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full">
+                                <label>Title *</label>
+                                <input type="text" id="newsTitle" placeholder="e.g., KTM Dominates in League Victory" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full">
+                                <label>Article Content *</label>
+                                <textarea id="newsContent" rows="6" placeholder="Write the full article here..." required></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Publish Article</button>
+                    </form>
+                </div>
+
+                <div class="admin-data-card">
+                    <h3>News Articles</h3>
+                    <div id="newsList" class="data-list">
+                        <p class="empty-state">No articles published yet</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Media Section -->
+            <section id="media" class="admin-section">
+                <div class="section-header">
+                    <h2>Media Gallery</h2>
+                    <p>Add videos, photos, and interviews</p>
+                </div>
+
+                <div class="admin-form-card">
+                    <h3><i class="fas fa-plus-circle"></i> Add Media Item</h3>
+                    <form id="mediaForm" class="admin-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Media Type *</label>
+                                <select id="mediaType" required>
+                                    <option value="">Select Type</option>
+                                    <option value="video">Video Highlight</option>
+                                    <option value="photo">Match Photo</option>
+                                    <option value="interview">Interview</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Date *</label>
+                                <input type="date" id="mediaDate" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full">
+                                <label>Title *</label>
+                                <input type="text" id="mediaTitle" placeholder="e.g., KTM vs Pirates FC - Match Highlights" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full">
+                                <label>Duration / Details</label>
+                                <input type="text" id="mediaDuration" placeholder="e.g., 2:45 min or 12 photos">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Add to Gallery</button>
+                    </form>
+                </div>
+
+                <div class="admin-data-card">
+                    <h3>Media Items</h3>
+                    <div id="mediaList" class="data-list">
+                        <p class="empty-state">No media items added yet</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Program Applications Section -->
+            <section id="applications" class="admin-section">
+                <div class="section-header">
+                    <h2>Program Applications</h2>
+                    <p>Manage applications from participants and coaching staff</p>
+                </div>
+
+                <div class="admin-data-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="margin: 0;">Submitted Applications</h3>
+                        <button class="btn btn-secondary" onclick="AdminModule.exportApplications()"><i class="fas fa-download"></i> Export</button>
+                    </div>
+                    <div style="margin-bottom: 1rem; padding: 1rem; background-color: #f0f0f0; border-radius: 5px;">
+                        <p style="margin: 0;"><strong>Filter by:</strong></p>
+                        <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                            <label><input type="radio" name="roleFilter" value="all" checked onchange="AdminModule.filterApplications('all')"> All</label>
+                            <label><input type="radio" name="roleFilter" value="participant" onchange="AdminModule.filterApplications('participant')"> Participants</label>
+                            <label><input type="radio" name="roleFilter" value="coach" onchange="AdminModule.filterApplications('coach')"> Coaches</label>
+                        </div>
+                    </div>
+                    <div id="applicationsList" class="data-list">
+                        <p class="empty-state">No applications submitted yet</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Script Files (Modular Architecture) -->
+    <!-- Utilities -->
+    <script src="js/utils/dateUtils.js"></script>
+    <script src="js/utils/storage.js"></script>
+    <script src="js/utils/authService.js"></script>
+    
+    <!-- Admin Module -->
+    <script src="js/modules/admin.js"></script>
+
+    <!-- Staff Login Script -->
+    <script>
+        // Setup staff login system
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginOverlay = document.getElementById('staffLoginOverlay');
+            const loginForm = document.getElementById('staffLoginForm');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const staffLogoutContainer = document.getElementById('staffLogoutContainer');
+            const staffNameSpan = document.getElementById('staffName');
+            const adminContent = document.querySelector('.admin-container');
+            const adminHeader = document.querySelector('.admin-header');
+
+            // Check if user is authenticated
+            function checkAuth() {
+                if (AuthService.isAuthenticated()) {
+                    const staff = AuthService.getCurrentStaff();
+                    loginOverlay.style.display = 'none';
+                    adminContent.style.display = 'flex';
+                    adminHeader.style.display = 'block';
+                    staffLogoutContainer.style.display = 'block';
+                    staffNameSpan.textContent = staff.name + ' (' + staff.role + ')';
+                    
+                    // Initialize admin module
+                    if (typeof AdminModule !== 'undefined') {
+                        AdminModule.init();
+                    }
+                } else {
+                    loginOverlay.style.display = 'flex';
+                    adminContent.style.display = 'none';
+                    adminHeader.style.display = 'none';
+                    staffLogoutContainer.style.display = 'none';
+                }
+            }
+
+            // Handle login form submission
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const username = document.getElementById('staffUsername').value;
+                const password = document.getElementById('staffPassword').value;
+                
+                const result = AuthService.login(username, password);
+                
+                if (result.success) {
+                    checkAuth();
+                    loginForm.reset();
+                    alert('✅ Login successful! Welcome ' + result.message.split('Welcome ')[1]);
+                } else {
+                    alert(result.message);
+                    document.getElementById('staffPassword').value = '';
+                }
+            });
+
+            // Handle logout
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    const result = AuthService.logout();
+                    alert(result.message);
+                    checkAuth();
+                });
+            }
+
+            // Change password button & modal
+            const changePwdBtn = document.getElementById('changePasswordBtn');
+            const changePwdOverlay = document.getElementById('changePasswordOverlay');
+            const changePwdForm = document.getElementById('changePasswordForm');
+            const cancelChange = document.getElementById('cancelChangePwd');
+
+            if (changePwdBtn) {
+                changePwdBtn.addEventListener('click', () => {
+                    changePwdOverlay.style.display = 'flex';
+                });
+            }
+
+            if (cancelChange) {
+                cancelChange.addEventListener('click', () => {
+                    changePwdOverlay.style.display = 'none';
+                    changePwdForm.reset();
+                });
+            }
+
+            if (changePwdForm) {
+                changePwdForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const current = document.getElementById('currentPassword').value;
+                    const newPwd = document.getElementById('newPassword').value;
+                    const confirm = document.getElementById('confirmNewPassword').value;
+
+                    if (newPwd !== confirm) {
+                        alert('❌ New passwords do not match.');
+                        return;
+                    }
+
+                    const result = AuthService.changePassword(current, newPwd);
+                    alert(result.message);
+                    if (result.success) {
+                        changePwdOverlay.style.display = 'none';
+                        changePwdForm.reset();
+                    }
+                });
+            }
+
+            // Initial auth check
+            checkAuth();
+        });
+    </script>
+</body>
+</html>
